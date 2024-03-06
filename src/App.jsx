@@ -1,32 +1,80 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import React, { useState } from 'react';
+import { Typed } from 'react-typed'; // Import for typing animation
 import './App.css';
-import App2 from './App2';
+
+const usuarios = [
+  {
+    usuario: 'usuario1',
+    contraseña: 'contraseña1',
+  },
+  {
+    usuario: 'usuario2',
+    contraseña: 'contraseña2',
+  },
+  // ... more users (optional)
+];
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [usuario, setUsuario] = useState('');
+  const [contraseña, setContraseña] = useState('');
+  const [error, setError] = useState(null);
+
+  const validarLogin = () => {
+    const usuarioEncontrado = usuarios.find(
+      (usuario) => usuario.usuario === usuario && usuario.contraseña === contraseña
+    );
+
+    if (!usuarioEncontrado) {
+      setError('Usuario o contraseña incorrectos');
+      return;
+    }
+
+    // Handle successful login (e.g., redirect to homepage, display success message)
+    console.log('Login exitoso!');
+  };
 
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
+    <div className='container'>
+      <div className='login-box'>
+        <img src='logo-facebook.png' alt='Logo Facebook' />
+
+        {/* Dynamic title with typing animation */}
+        <h1 className='titulo-dinamico'>
+          <Typed
+            strings={[`Hola, ${usuario}`]}
+            typeSpeed={40}
+            backSpeed={0} // Prevent backspace animation
+            cursorChar='|' // Customize cursor character
+          />
+        </h1>
+
+        <form onSubmit={validarLogin}>
+          <input
+            type='text'
+            placeholder='Correo electrónico o número de teléfono'
+            value={usuario}
+            onChange={(e) => {
+              setUsuario(e.target.value);
+            }}
+            required
+          />
+          <input
+            type='password'
+            placeholder='Contraseña'
+            value={contraseña}
+            onChange={(e) => setContraseña(e.target.value)}
+            required
+          />
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <button type='submit' onClick={validarLogin}>
+            Entrar
+          </button>
+          <a href='#'>¿Olvidaste la contraseña?</a>
+          <hr />
+          <a href='#'>Crear cuenta nueva</a>
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <App2></App2>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-    </>
+    </div>
   );
 }
 
